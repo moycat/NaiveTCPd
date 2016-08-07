@@ -3,6 +3,8 @@ use Workerman\Worker;
 require_once './Workerman/Autoloader.php';
 require_once 'quote.php';
 
+$echo_worker = new Worker("tcp://0.0.0.0:7");
+$udp_echo_worker = new Worker("udp://0.0.0.0:7");
 $discard_worker = new Worker("tcp://0.0.0.0:9");
 $daytime_worker = new Worker("tcp://0.0.0.0:13");
 $udp_daytime_worker = new Worker("udp://0.0.0.0:13");
@@ -38,11 +40,6 @@ $udp_chargen_worker->onMessage = function ($connection, $data)
     $connection->send($msg);
 };
 
-$discard_worker->onMessage = function ($connection, $data)
-{
-    $connection->close();
-};
-
 $daytime_worker->onConnect = function ($connection)
 {
     sendTimestamp($connection);
@@ -52,6 +49,16 @@ $daytime_worker->onConnect = function ($connection)
 $daytime_worker->onMessage = function ($connection, $data)
 {
     sendTimestamp($connection);
+};
+
+$echo_worker->onMessage = function ($connection, $data)
+{
+    $connection->send($data);
+};
+
+$udp_echo_worker->onMessage = function ($connection, $data)
+{
+    $connection->send($data);
 };
 
 Worker::runAll();
