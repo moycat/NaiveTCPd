@@ -26,7 +26,7 @@ $udp_qotd_worker->onMessage = function ($connection, $data)
 
 $chargen_worker->onConnect = function ($connection)
 {
-    while (sendQuote($connection, "¡¡") !== false);
+    while (sendQuote($connection, "Â¡Â¡") !== false);
     $connection->close();
 };
 
@@ -46,7 +46,7 @@ $daytime_worker->onConnect = function ($connection)
     $connection->close();
 };
 
-$daytime_worker->onMessage = function ($connection, $data)
+$udp_daytime_worker->onMessage = function ($connection, $data)
 {
     sendTimestamp($connection);
 };
